@@ -90,12 +90,12 @@ angular.module('dashboardApp.services')
         if (a && !b) { return 1; }
         if (!a && b) { return -1; }
         if (!a && !b) { return 0; }
-        var idA = parseInt(a.id);
-        var idB = parseInt(b.id);
+        var idA = parseInt(a.id, 10);
+        var idB = parseInt(b.id, 10);
         if (idA < idB) { return -1; }
         if (idA > idB) { return 1; }
         return 0;
-      }
+      };
     }
 
     return new Sensors();

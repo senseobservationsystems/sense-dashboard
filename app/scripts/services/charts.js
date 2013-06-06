@@ -258,8 +258,7 @@ angular.module('dashboardApp.services')
                   type: 'datetime',
                   dateTimeLabelFormats: {
                     day: '%e. %b'
-                  },
-                  minTickInterval: 24 * 3600 * 1000
+                  }
                 },
                 yAxis: {
                   title: {
@@ -290,13 +289,6 @@ angular.module('dashboardApp.services')
                       }
                     }
                   }]
-                },
-                plotOptions: {
-                  line: {
-                    marker: {
-                      enabled: false
-                    }
-                  }
                 },
                 series: series,
                 tooltip: {

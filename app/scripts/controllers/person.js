@@ -92,7 +92,6 @@ angular.module('dashboardApp')
             $scope.personalActivityChart = highchart;
 
             // update accelerometer data every 5 second
-            var lastData = null;
             var data = chart.series[0].data;
             var lastDate;
             if (data.length > 0) {
@@ -110,15 +109,19 @@ angular.module('dashboardApp')
                   function(data) {
                     if (data && data.length > 0 && data[data.length-1].date !== lastDate) {
                       console.log('got new activity data');
-                      lastData = data[data.length-1];
-                      lastDate = lastData.date;
+                      var series = highchart.series;
+                      var serie = series[0];
+                      lastDate = serie.data[serie.data.length-1].x;
                       for (var i in data) {
                         var point = data[i];
                         var value = point.value;
-                        var series = highchart.series;
                         var date = point.date * 1000;
                         var activity = ['unknown', 'sit', 'stand'].indexOf(value);
-                        series[0].addPoint([date, activity], true, true);
+
+                        if (!lastDate || date > lastDate) {
+                          serie.addPoint([date, activity], true, true);
+                          lastDate = date / 1000;
+                        }
                       }
                     } else {
                       console.log('old data');

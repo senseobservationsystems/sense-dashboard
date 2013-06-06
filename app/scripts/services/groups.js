@@ -32,6 +32,17 @@ angular.module('dashboardApp.services')
 
           // getting related sensor
           csResource.GroupSensor.query({groupId: groupId, details: 'full'}, function(result) {
+            var failure = function() {
+              console.log('failed while getting last data point for sensor' + sensor.id);
+            };
+
+            var processResult = function(result) {
+              if (result.data.length > 0) {
+                var sensorId = result.data[0].sensor_id;
+                var sensor = self.sensorIdMap[sensorId];
+                sensor.processData(result.data);
+              }
+            };
             for (var i=0; i < result.sensors.length; i++) {
               var sensor = result.sensors[i];
               if (self.keepSensor(sensor)) {
@@ -53,16 +64,7 @@ angular.module('dashboardApp.services')
                 }
 
                 // get the last data point for each of the sensor
-                csResource.SensorData.query({id: sensor.id, last: 1}, function(result) {
-                  if (result.data.length > 0) {
-                    var sensorId = result.data[0]['sensor_id'];
-                    var sensor = self.sensorIdMap[sensorId];
-                    sensor.processData(result.data);
-                  }
-                },
-                function() {
-                  console.log('failed while getting last data point for sensor' + sensor.id);
-                });
+                csResource.SensorData.query({id: sensor.id, last: 1}, processResult, failure);
               }
             }
 
