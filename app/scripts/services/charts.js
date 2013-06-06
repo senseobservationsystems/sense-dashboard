@@ -5,6 +5,11 @@ angular.module('dashboardApp.services')
   .factory('chartService',
     ['$q', 'csResource', 'csUtil',
     function ($q, csResource, csUtil) {
+      Highcharts.setOptions({
+        global: {
+          useUTC: false
+        }
+      });
 
       /**
        * function to transform sensor data JSON to time series that is understood by highcharts
@@ -221,8 +226,7 @@ angular.module('dashboardApp.services')
                     type: 'datetime',
                     dateTimeLabelFormats: {
                       day: '%e. %b'
-                    },
-                    minTickInterval: 24 * 3600 * 1000
+                    }
                   },
                   plotOptions: {
                     line: {
