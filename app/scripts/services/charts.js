@@ -235,6 +235,10 @@ angular.module('dashboardApp.services')
                       }
                     }
                   },
+                  tooltip: {
+                    shared: true,
+                    crosshairs: true
+                  },
                   series: series
                 };
 
