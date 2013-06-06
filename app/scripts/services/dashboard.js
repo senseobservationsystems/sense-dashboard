@@ -2,11 +2,11 @@
 /* jshint camelcase: false */
 
 angular.module('dashboardApp.services')
-  .factory('senseUser',
+  .factory('dashboardService',
       ['$q', 'csResource',
       function ($q, csResource) {
 
-    function SenseUser() {
+    function DashboardService() {
       this.users = {}; // user resource
       this.userIds = []; // list of user_id on this group
 	    this.userIdMap = {}; // map user_id to user object
@@ -168,7 +168,7 @@ angular.module('dashboardApp.services')
       };
     }
 
-    return new SenseUser();
+    return new DashboardService();
   }])
 ;
 

@@ -2,11 +2,11 @@
 /*global $:false*/
 
 angular.module('dashboardApp.services')
-  .factory('sensors',
+  .factory('personalSensor',
     ['$q', 'csResource', 'authService',
     function ($q, csResource, authService) {
-    function Sensors() {
-      this.listAllSensor = function() {
+    function PersonalSensor() {
+      this.initialize = function() {
         var deffered = $q.defer();
         var sensorGroupDeffered = $q.defer();
 
@@ -98,7 +98,7 @@ angular.module('dashboardApp.services')
       };
     }
 
-    return new Sensors();
+    return new PersonalSensor();
   }])
 ;
 

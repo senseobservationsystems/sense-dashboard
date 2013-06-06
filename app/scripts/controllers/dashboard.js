@@ -2,8 +2,8 @@
 
 angular.module('dashboardApp')
   .controller('DashboardCtrl',
-      ['$scope', '$location', '$timeout', 'authService', 'senseUser',
-      function ($scope, $location, $timeout, authService, senseUser) {
+      ['$scope', '$location', '$timeout', 'authService', 'dashboardService',
+      function ($scope, $location, $timeout, authService, dashboardService) {
     $scope.loggedIn = authService.loggedIn;
     if (!$scope.loggedIn) {
       $location.path('/');
@@ -12,16 +12,16 @@ angular.module('dashboardApp')
 
     $scope.pollData = function() {
       $scope.timer = $timeout(function() {
-        senseUser.fetchSensorData();
+        dashboardService.fetchSensorData();
         $scope.pollData();
       }, 2000); //pool new data every 2 second
     };
 
     $scope.initialize = function() {
-      senseUser.getUsers(1875, authService.currentUser.user).then(
+      dashboardService.getUsers(1875, authService.currentUser.user).then(
         function(users) {
           $scope.users = users;
-          senseUser.fetchSensorData();
+          dashboardService.fetchSensorData();
           $scope.pollData();
         }
       );

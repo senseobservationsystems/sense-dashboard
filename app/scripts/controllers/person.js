@@ -3,9 +3,9 @@
 
 angular.module('dashboardApp')
   .controller('PersonCtrl',
-  ['$scope', '$location', '$routeParams', '$window', '$timeout', 'authService', 'sensors', 'csResource',
+  ['$scope', '$location', '$routeParams', '$window', '$timeout', 'authService', 'personalSensor', 'csResource',
   'chartService',
-  function ($scope, $location, $routeParams, $window, $timeout, authService, sensors, csResource, chartService) {
+  function ($scope, $location, $routeParams, $window, $timeout, authService, personalSensor, csResource, chartService) {
     var loggedIn = authService.loggedIn;
     if (!loggedIn) {
       //set redirection to this page as r, redirect to main page
@@ -35,28 +35,28 @@ angular.module('dashboardApp')
 
     $scope.sensors = [];
 
-    sensors.listAllSensor().then(function(result){
+    personalSensor.initialize().then(function(result){
       $scope.sensors = result;
-      var weatherSensors = sensors.findFirstSensor(result, 'weather', $scope.userId);
+      var weatherSensors = personalSensor.findFirstSensor(result, 'weather', $scope.userId);
       $scope.weatherSensor = weatherSensors[weatherSensors.length -1];
 
-      var locationSensors = sensors.findFirstSensor(result, 'Location', $scope.userId);
+      var locationSensors = personalSensor.findFirstSensor(result, 'Location', $scope.userId);
       $scope.locationSensor = locationSensors[locationSensors.length -1];
 
-      var sleepSensors = sensors.findFirstSensor(result, ['sleep', 'Sleep', 'Sleep Time', 'sleep_time'], $scope.userId);
+      var sleepSensors = personalSensor.findFirstSensor(result, ['sleep', 'Sleep', 'Sleep Time', 'sleep_time'], $scope.userId);
       $scope.sleepSensor = sleepSensors[sleepSensors.length -1];
 
-      var reachabilitySensors = sensors.findFirstSensor(result, 'Reachability', $scope.userId);
+      var reachabilitySensors = personalSensor.findFirstSensor(result, 'Reachability', $scope.userId);
       $scope.reachabilitySensor = reachabilitySensors[reachabilitySensors.length -1];
 
-      var accelerometerSensors = sensors.findFirstSensor(result, 'accelerometer', $scope.userId);
+      var accelerometerSensors = personalSensor.findFirstSensor(result, 'accelerometer', $scope.userId);
       $scope.accelerometerSensor = accelerometerSensors[accelerometerSensors.length - 1];
 
-      var activitySensors = sensors.findFirstSensor(result, 'Activity', $scope.userId);
+      var activitySensors = personalSensor.findFirstSensor(result, 'Activity', $scope.userId);
       $scope.activitySensor = activitySensors[activitySensors.length - 1];
 
       function updateReachability() {
-        $scope.accelerometerTimer = $timeout(function() {
+        $scope.reachabilityTimer = $timeout(function() {
           csResource.SensorData.query({id: $scope.reachabilitySensor.id, 'last': 1},
             function(value) {
               if (value.data.length > 0) {
@@ -219,13 +219,17 @@ angular.module('dashboardApp')
         );
       }
 
-      // kill timer on destroy
-      $scope.$on('$destroy', function() {
-        console.log('destroy: clearing timeout');
-        $timeout.cancel($scope.accelerometerTimer);
-        $timeout.cancel($scope.activityTimer);
-        $timeout.cancel($scope.accelerometerTimer);
-      });
+    });
+
+    function clearTimeout() {
+      console.log('destroy: clearing timeout');
+      $timeout.cancel($scope.accelerometerTimer);
+      $timeout.cancel($scope.activityTimer);
+      $timeout.cancel($scope.reachabilityTimer);
+    }
+    // kill timer on destroy
+    $scope.$on('$destroy', function() {
+      clearTimeout();
     });
 
   }]);
