@@ -14,7 +14,7 @@ angular.module('dashboardApp.services')
 	    this.sensorIdMap = {}; // map sensor_id to sensor object
       this.currentUser = {};
       this.timer = null;
-      this.window = 20 * 60; // data window. in seconds
+      this.window = 5 * 60; // data window. in seconds
 
       this.getUsers = function(groupId, currentUser) {
         this.currentUser = currentUser;
@@ -51,10 +51,21 @@ angular.module('dashboardApp.services')
                 } else {
                   sensor.processData = self.processNothing;
                 }
+
+                // get the last data point for each of the sensor
+                csResource.SensorData.query({id: sensor.id, last: 1}, function(result) {
+                  if (result.data.length > 0) {
+                    var sensorId = result.data[0]['sensor_id'];
+                    var sensor = self.sensorIdMap[sensorId];
+                    sensor.processData(result.data);
+                  }
+                },
+                function() {
+                  console.log('failed while getting last data point for sensor' + sensor.id);
+                });
               }
             }
 
-            // pool last data from commonSense
             deferred.resolve(self.users);
           });
 
@@ -122,12 +133,16 @@ angular.module('dashboardApp.services')
        */
       this.processLocation = function(data) {
         if (data && data.length > 0) {
-          var value = data[data.length -1].value;
-          this.user.location = value;
-        } else {
-          if (!this.location) {
-            this.user.location = 'Unknown';
+          var location = 'Unknown';
+          var point = data[data.length -1];
+          var now = (new Date()).getTime() / 1000;
+
+          // only accept last 12 hour data
+          if (now - point.date < 12 * 60 * 60) {
+            location = point.value;
           }
+
+          this.user.location = location;
         }
       };
 
@@ -138,7 +153,7 @@ angular.module('dashboardApp.services')
           var point = data[data.length -1];
           var now = (new Date()).getTime() / 1000;
 
-          if (now - point.date < 300) {
+          if (now - point.date < 12 * 60 * 60) {
             reachable = point.value;
           }
         }

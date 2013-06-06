@@ -82,8 +82,20 @@ angular.module('dashboardApp.services')
           }
         }
 
+        retval.sort(this.compareSensorById);
         return retval;
       };
+
+      this.compareSensorById = function(a, b) {
+        if (a && !b) { return 1; }
+        if (!a && b) { return -1; }
+        if (!a && !b) { return 0; }
+        var idA = parseInt(a.id);
+        var idB = parseInt(b.id);
+        if (idA < idB) { return -1; }
+        if (idA > idB) { return 1; }
+        return 0;
+      }
     }
 
     return new Sensors();
