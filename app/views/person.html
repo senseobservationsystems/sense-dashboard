@@ -13,7 +13,10 @@
       </div>
     </div>
     <div class="span3 reachability">
-      <span class="reachable">Reachable</span>
+      <span class="reachable"></span>
+      <span ng-class="{reachable: reachability == 'reachable', unreachable: reachability == 'unreachable', unknown: reachability == 'Unknown'}" class="value">
+        {{ reachability }}
+      </span>
     </div>
   </div>
 

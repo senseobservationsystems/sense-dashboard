@@ -17,6 +17,7 @@ angular.module('dashboardApp')
     }
 
     $scope.userId = $routeParams.id;
+    $scope.reachability = 'loading..';
 
     if ($scope.userId === authService.currentUser.user.id) {
       $scope.user = authService.currentUser.user;
@@ -45,7 +46,7 @@ angular.module('dashboardApp')
       var sleepSensors = sensors.findFirstSensor(result, ['sleep', 'Sleep', 'Sleep Time', 'sleep_time'], $scope.userId);
       $scope.sleepSensor = sleepSensors[sleepSensors.length -1];
 
-      var reachabilitySensors = sensors.findFirstSensor(result, 'Reachabilitys', $scope.userId);
+      var reachabilitySensors = sensors.findFirstSensor(result, 'Reachability', $scope.userId);
       $scope.reachabilitySensor = reachabilitySensors[reachabilitySensors.length -1];
 
       var accelerometerSensors = sensors.findFirstSensor(result, 'accelerometer', $scope.userId);
@@ -54,6 +55,27 @@ angular.module('dashboardApp')
       var activitySensors = sensors.findFirstSensor(result, 'Activity', $scope.userId);
       $scope.activitySensor = activitySensors[activitySensors.length - 1];
 
+      function updateReachability() {
+        $scope.accelerometerTimer = $timeout(function() {
+          csResource.SensorData.query({id: $scope.reachabilitySensor.id, 'last': 1},
+            function(value) {
+              if (value.data.length > 0) {
+                var point = value.data[0];
+                var now = (new Date()).getTime() / 1000;
+                if (now - point.date < 12 * 60 * 60) {
+                  $scope.reachability = point.value;
+                }
+              }
+            },
+            function() { console.log('failed getting reachability data'); }
+            );
+          updateReachability();
+        }, 2000);
+      }
+
+      if ($scope.reachabilitySensor) {
+        updateReachability();
+      }
 
       if ($scope.weatherSensor) {
         //var aDayAgo = (new Date()).getTime() / 1000 - 24 * 60 * 60;
@@ -202,6 +224,7 @@ angular.module('dashboardApp')
         console.log('destroy: clearing timeout');
         $timeout.cancel($scope.accelerometerTimer);
         $timeout.cancel($scope.activityTimer);
+        $timeout.cancel($scope.accelerometerTimer);
       });
     });
 
