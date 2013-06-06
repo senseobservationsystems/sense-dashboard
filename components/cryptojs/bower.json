@@ -1,0 +1,9 @@
+{
+  "name": "cryptojs",
+  "version": "0.0.0",
+  "commit": "c3c843c5131e00607fd8cad1baf3761d0209663a",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/gwjjeff/cryptojs.git"
+  }
+}
