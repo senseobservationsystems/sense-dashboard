@@ -122,6 +122,11 @@ angular.module('dashboardApp.services')
               // transform Information to time series
               var series = weatherDataToSeries(value);
               var chart = {
+                  colors: [
+                    '#fc962f',
+                    '#fa54dd',
+                    '#ed2931'
+                  ],
                   chart: {
                     zoomType: 'x'
                   },
@@ -189,6 +194,11 @@ angular.module('dashboardApp.services')
               // transform Information to time series
               var series = numberDataToSeries(value);
               var chart = {
+                  colors: [
+                    '#fc962f',
+                    '#fa54dd',
+                    '#ed2931'
+                  ],
                   chart: {
                   },
                   title: null,
@@ -219,6 +229,11 @@ angular.module('dashboardApp.services')
               // transform Information to time series
               var series = accelerometerDataToSeries(value);
               var chart = {
+                  colors: [
+                    '#fc962f',
+                    '#fa54dd',
+                    '#ed2931'
+                  ],
                   chart: {
                   },
                   title: null,
@@ -259,6 +274,11 @@ angular.module('dashboardApp.services')
               // transform Information to time series
               var series = activityDataToSeries(value);
               var chart = {
+                  colors: [
+                    '#fc962f',
+                    '#fa54dd',
+                    '#ed2931'
+                  ],
                 chart: {
                 },
                 title: null,
