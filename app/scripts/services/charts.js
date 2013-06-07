@@ -118,7 +118,12 @@ angular.module('dashboardApp.services')
 
           // get all data point from StartDate
           csResource.getAllData(csResource.SensorData, {id: sensor.id, 'start_date': startDate, interval: interval}, 'data').then(
-            function(value) {
+            function(response) {
+              if (!response.success) {
+                console.log('error while getting personal weather data');
+                return;
+              }
+              var value = response.result;
               // transform Information to time series
               var series = weatherDataToSeries(value);
               var chart = {
@@ -185,7 +190,12 @@ angular.module('dashboardApp.services')
 
           // get all data point from StartDate
           csResource.getAllData(csResource.SensorData, {id: sensor.id, 'start_date': startDate, interval: interval}, 'data').then(
-            function(value) {
+            function(response) {
+              if (response.value) {
+                console.log('error while getting sleep data');
+                return;
+              }
+              var value = response.result;
               // transform Information to time series
               var series = numberDataToSeries(value);
               var chart = {
@@ -215,7 +225,13 @@ angular.module('dashboardApp.services')
 
           // get all data point from StartDate
           csResource.getAllData(csResource.SensorData, {id: sensor.id, 'start_date': startDate, interval: interval}, 'data').then(
-            function(value) {
+            function(response) {
+              if (response.value) {
+                console.log('error while getting accelerometer data');
+                return;
+              }
+              var value = response.result;
+
               // transform Information to time series
               var series = accelerometerDataToSeries(value);
               var chart = {
@@ -255,7 +271,13 @@ angular.module('dashboardApp.services')
 
           // get all data point from StartDate
           csResource.getAllData(csResource.SensorData, {id: sensor.id, 'start_date': startDate, interval: interval}, 'data').then(
-            function(value) {
+            function(response) {
+              if (response.value) {
+                console.log('error while getting activity data');
+                return;
+              }
+              var value = response.result;
+
               // transform Information to time series
               var series = activityDataToSeries(value);
               var chart = {

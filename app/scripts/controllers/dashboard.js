@@ -1,4 +1,5 @@
 'use strict';
+/* global dashboardDebug */
 
 angular.module('dashboardApp')
   .controller('DashboardCtrl',
@@ -10,6 +11,12 @@ angular.module('dashboardApp')
       return;
     }
 
+    $scope.$watch(function() {
+      return dashboardDebug;
+    }, function() {
+      $scope.dashboardDebug = dashboardDebug;
+    });
+
     $scope.pollData = function() {
       $scope.timer = $timeout(function() {
         dashboardService.fetchSensorData();
@@ -18,7 +25,7 @@ angular.module('dashboardApp')
     };
 
     $scope.initialize = function() {
-      dashboardService.getUsers(1875, authService.currentUser.user).then(
+      dashboardService.initialize(1875, authService.currentUser.user).then(
         function(users) {
           $scope.users = users;
           dashboardService.fetchSensorData();
@@ -78,5 +85,4 @@ angular.module('dashboardApp')
         $scope.users.users.reverse();
       }
     };
-
   }]);

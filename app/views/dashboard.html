@@ -1,27 +1,32 @@
+{{ dashboardDebug }}
 <div ng-init="initialize()" class="user-table" ng-show="loggedIn">
   <table class="table">
     <tr>
       <th ng-click="sortUser('who')">
         <i ng-class="{'icon-chevron-up': dir == 'asc', 'icon-chevron-down': dir == 'desc'}" ng-show="sort == 'who'"></i>
-        Who ?
+        User
       </th>
       <th ng-click="sortUser('where')">
         <i ng-class="{'icon-chevron-up': dir == 'asc', 'icon-chevron-down': dir == 'desc'}" ng-show="sort == 'where'"></i>
-        Where ?
+        Location
       </th>
       <th ng-click="sortUser('reachable')">
         <i ng-class="{'icon-chevron-up': dir == 'asc', 'icon-chevron-down': dir == 'desc'}" ng-show="sort == 'reachable'"></i>
-        Reacheable ?
+         Reachability
       </th>
     </tr>
-    <tr ng-repeat="user in users.users">
+    <tr ng-repeat="user in users.users" ng-show="user.show">
       <td>
         <img ng-src="{{user.email | gravatarUrl:25 }}"/>
         <a ng-href="#/person/{{user.id}}">{{ fullName(user) }}</a> ({{ user.email }})
       </td>
-      <td class="value" ng-class="{unknown: user.location == 'Unknown'}">{{ user.location }}</td>
+      <td class="value" ng-class="{unknown: user.location == 'Unknown'}">
+        {{ user.location }}
+        <span ng-show="dashboardDebug"> {{user.location_sensor.id }} </span>
+      </td>
       <td ng-class="{reachable: user.reachability == 'reachable', unreachable: user.reachability == 'unreachable', unknown: user.reachability == 'Unknown'}" class="value">
         {{ user.reachability }}
+        <span ng-show="dashboardDebug">{{ user.reachability_sensor.id }}</span>
       </td>
     </tr>
   </table>

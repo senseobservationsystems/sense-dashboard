@@ -1,10 +1,11 @@
 'use strict';
+/* jshint unused: false */
 
+var dashboardDebug = false;
 angular.module('dashboardApp',
   ['ngResource', 'ngCookies', 'dashboardApp.services', 'gravatarFilters', 'highcharts.directives'])
   .config(function ($routeProvider, $httpProvider) {
     delete $httpProvider.defaults.headers.common['X-Requested-With'];
-
     $routeProvider
       .when('/', {
         templateUrl: 'views/login.html',
