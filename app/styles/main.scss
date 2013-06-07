@@ -1,9 +1,11 @@
 @import "compass_twitter_bootstrap";
 
+@import "input_highlights";
+
 body {
   padding-top: 40px;
   padding-bottom: 40px;
-  background-color: #000;
+  background-color: #999;
 }
 
 .form-signin {
@@ -65,7 +67,7 @@ body {
     position: relative;
     height: 100px;
     background-color: #fff;  
-    @include border-top-right-radius(10px);
+    //@include border-top-right-radius(10px);
   }
   
   .user-info, {
@@ -97,16 +99,17 @@ body {
 }
 
 #back-button {
-  @include border-radius(0);
+  //@include border-radius(0);
   width: 75px;
+  margin-bottom:20px;
 }
 
 .bottom .widget {
-  @include border-bottom-radius(10px);  
+  //@include border-bottom-radius(10px);  
 }
 .widget {
   padding: 10px;
-  margin-top: 10px;
+  margin-top: 20px;
   background-color: #fff;
   
   .title {
@@ -118,3 +121,5 @@ body {
     margin-top: 20px
   }
 }
+
+
