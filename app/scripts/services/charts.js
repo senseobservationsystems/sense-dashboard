@@ -296,11 +296,11 @@ angular.module('dashboardApp.services')
               // transform Information to time series
               var series = activityDataToSeries(value);
               var chart = {
-                  colors: [
-                    '#fc962f',
-                    '#fa54dd',
-                    '#ed2931'
-                  ],
+                colors: [
+                  '#fc962f',
+                  '#fa54dd',
+                  '#ed2931'
+                ],
                 chart: {
                 },
                 title: null,
