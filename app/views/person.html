@@ -1,5 +1,22 @@
+
 <div class="personal-page">
-  <a href="#/dashboard" id="back-button" class="btn">← Back</a>
+ <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="#"><img src="images/icon.png"></a>
+            
+          <div class="nav-collapse collapse">
+            <ul class="nav right">
+              <li><a href="#">Sense Dashboard</a></li>
+              
+
+            </ul>
+            <a class="btn pull-right" href="#/dashboard"><i class="icon-arrow-left"></i>Back</a>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
   <div class="row-fluid user-header">
     <div class="span9 user-info">
       <img id="user-image" ng-src="{{ user.email | gravatarUrl:80 }}"/>
