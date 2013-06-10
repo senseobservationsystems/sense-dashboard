@@ -32,7 +32,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr ng-repeat="user in users.users">
+    <tr ng-repeat="user in users.users" ng-show="user.show">
       <td>
         <img ng-src="{{user.email | gravatarUrl:25 }}"/>
         <a ng-href="#/person/{{user.id}}">{{ fullName(user) }}</a> ({{ user.email }})

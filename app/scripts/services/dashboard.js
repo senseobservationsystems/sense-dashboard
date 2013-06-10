@@ -99,7 +99,7 @@ angular.module('dashboardApp.services')
                 users.splice(len, 1);
               }
 
-              user.show = user.id !== '7890';
+              user.show = ['7890', '6328'].indexOf(user.id) === -1;
             }
             deferred.resolve(self.users);
           });
