@@ -19,6 +19,10 @@ angular.module('dashboardApp',
         templateUrl: 'views/person.html',
         controller: 'PersonCtrl'
       })
+      .when('/logout', {
+        templateUrl: 'views/login.html',
+        controller: 'LogoutCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });

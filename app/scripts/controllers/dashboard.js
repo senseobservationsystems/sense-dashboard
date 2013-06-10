@@ -5,7 +5,7 @@ angular.module('dashboardApp')
   .controller('DashboardCtrl',
       ['$scope', '$location', '$timeout', 'authService', 'dashboardService',
       function ($scope, $location, $timeout, authService, dashboardService) {
-    $scope.loggedIn = authService.loggedIn;
+    $scope.loggedIn = authService.check();
     if (!$scope.loggedIn) {
       $location.path('/');
       return;

@@ -7,7 +7,7 @@ angular.module('dashboardApp')
   ['$scope', '$location', '$routeParams', '$window', '$timeout', 'authService', 'personalSensor', 'csResource',
   'chartService', 'csUtil',
   function ($scope, $location, $routeParams, $window, $timeout, authService, personalSensor, csResource, chartService, csUtil) {
-    var loggedIn = authService.loggedIn;
+    var loggedIn = authService.check();
     if (!loggedIn) {
       //set redirection to this page as r, redirect to main page
       $window.location.href = '/';
