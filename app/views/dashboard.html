@@ -2,34 +2,38 @@
  <div class="navbar navbar-inverse navbar-fixed-top">
       <div class="navbar-inner">
         <div class="container">
-          <a class="brand" href="#"><img src="images/icon.png"></a>
+          <a class="brand" href="#/dashboard"><img src="images/icon.png"></a>
             
           <div class="nav-collapse collapse">
             <ul class="nav right">
-              <li><a href="#">Sense Dashboard</a></li>
+              <li><a href="#/dashboard">Sense Dashboard</a></li>
               
 
             </ul>
-            <!-- <a class="btn pull&#45;right" href="http://twitter.github.com/bootstrap/">Sign out</a> -->
+            <a class="btn pull-right" href="#/"><i class="icon-off"></i> Sign out</a>
           </div><!--/.nav-collapse -->
         </div>
       </div>
     </div>
-  <table class="table">
+  <h1>Group members</h1>
+  <table class="table table-hover">
+    <thead>
     <tr>
       <th ng-click="sortUser('who')">
         <i ng-class="{'icon-chevron-up': dir == 'asc', 'icon-chevron-down': dir == 'desc'}" ng-show="sort == 'who'"></i>
-        Who ?
+        Person 
       </th>
       <th ng-click="sortUser('where')">
         <i ng-class="{'icon-chevron-up': dir == 'asc', 'icon-chevron-down': dir == 'desc'}" ng-show="sort == 'where'"></i>
-        Where ?
+        Location
       </th>
       <th ng-click="sortUser('reachable')">
         <i ng-class="{'icon-chevron-up': dir == 'asc', 'icon-chevron-down': dir == 'desc'}" ng-show="sort == 'reachable'"></i>
-        Reacheable ?
+        Reachability
       </th>
     </tr>
+  </thead>
+  <tbody>
     <tr ng-repeat="user in users.users">
       <td>
         <img ng-src="{{user.email | gravatarUrl:25 }}"/>
@@ -40,5 +44,6 @@
         {{ user.reachability }}
       </td>
     </tr>
+    </tbody>
   </table>
 </div>

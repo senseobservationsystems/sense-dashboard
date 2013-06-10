@@ -389,7 +389,7 @@
 
   .navbar-inner {
     @include ctb-gradient-vertical($navbarInverseBackgroundHighlight, $navbarInverseBackground);
-    border-color: $navbarInverseBorder;
+    //border-color: $navbarInverseBorder;
   }
 
   .brand,
