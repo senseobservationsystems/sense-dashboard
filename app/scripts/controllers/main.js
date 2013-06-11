@@ -2,7 +2,7 @@
 
 angular.module('dashboardApp')
   .controller('MainCtrl', ['$scope', 'authService', '$window', '$location', function ($scope, authService, $window, $location) {
-    $scope.user = {};
+    $scope.user = {username:"user@example.com",password:"sense"};
 
     $scope.doLogin = function() {
       authService.login($scope.user.username, $scope.user.password).then(function() {

@@ -45,7 +45,21 @@ body {
 .unreachable {
   color: #f00;
 }
+.user-table{
+  .status-icons{
+    line-height:29px;
 
+    i,span{
+      color:$errorText;
+    }
+    i.positive,span.positive{
+      color:$successText;
+    }
+  }
+  
+  
+}
+/*
 .user-table {
   background-color: #fff;
   padding: 10px;
@@ -58,7 +72,7 @@ body {
   .value {
     font-weight: bold;
   }
-}
+}*/
 
 .personal-page {
   .user-avatar {

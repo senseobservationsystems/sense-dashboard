@@ -64,6 +64,10 @@ angular.module('dashboardApp')
       return compare(a.reachability, b.reachability);
     }
 
+    $scope.showPerson = function(id){
+      window.location.href="#/person/"+id
+    };
+
 
     $scope.sortUser = function(column) {
       $scope.sort = column.toLowerCase();
