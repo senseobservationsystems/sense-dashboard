@@ -42,6 +42,10 @@ angular.module('dashboardApp')
 
     $scope.sensors = [];
 
+    $scope.fullName = function(user) {
+      return user.name + ' ' + user.surname;
+    };
+
     personalSensor.initialize().then(function(result){
       $scope.sensors = result;
       var weatherSensors = personalSensor.findFirstSensor(result, 'weather', $scope.userId);
@@ -70,13 +74,14 @@ angular.module('dashboardApp')
                 var point = value.data[0];
                 var now = (new Date()).getTime() / 1000;
                 if (now - point.date < 12 * 60 * 60) {
-                  $scope.reachability = point.value;
+                  $scope.reachability = point.value;       
                 } else {
                   $scope.reachability = 'reachable';
                 }
               } else {
                 $scope.reachability = 'reachable';
               }
+              $scope.phoneLabel = ($scope.reachability=='reachable')?"Available":"Busy";
             },
             function() { console.log('failed getting reachability data'); }
             );
@@ -87,6 +92,26 @@ angular.module('dashboardApp')
       if ($scope.reachabilitySensor) {
         updateReachability();
       }
+      
+      function updateLocation(){
+        $scope.locationTimer = $timeout(function(){
+          csResource.SensorData.query({id:$scope.locationSensor.id, 'last':1},
+            function(value){
+              $scope.location = "unknown";
+              if( value.data.length > 0 ){
+                $scope.location = value.data[0];
+              }
+              $scope.locationLabel = ($scope.location == "work")?"In office":"Out of office";
+                                       
+            });
+            updateLocation();
+
+        },5000);
+      }
+      if( $scope.locationSensor){
+        updateLocation();
+      }
+
 
       if ($scope.weatherSensor) {
         //var aDayAgo = (new Date()).getTime() / 1000 - 24 * 60 * 60;

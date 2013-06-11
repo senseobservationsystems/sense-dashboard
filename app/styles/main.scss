@@ -6,7 +6,7 @@ body {
   padding-top: 80px;
   padding-bottom: 40px;
   background-color: #999;
-  background:url('../images/ticks.png');
+  background:url('../images/ignore/ticks.png');
 }
 
 .form-signin {
@@ -45,16 +45,39 @@ body {
 .unreachable {
   color: #f00;
 }
-.user-table{
+
   .status-icons{
     line-height:29px;
-
+    span{
+      padding:0px 20px 0px 10px;
+    }
+    i{
+      vertical-align:middle;
+    }
     i,span{
       color:$errorText;
     }
     i.positive,span.positive{
       color:$successText;
     }
+  }
+.user-table{
+
+  .thumbnails{
+    .thumbnail{
+      background-color:#fff;
+      padding:10px;
+      cursor:hand;
+      cursor:pointer;
+    }
+    .img-circle{
+      margin-right:20px;
+    }
+    h3{
+      margin-top:0px;
+      line-height:28px;
+    }
+
   }
   
   
@@ -79,10 +102,18 @@ body {
     padding: 10px;
   }
   .user-header {
+    padding:10px;
     position: relative;
-    height: 100px;
     background-color: #fff;  
     //@include border-top-right-radius(10px);
+    .img-circle{
+      margin-right:20px;
+    }
+    h3{
+      margin-top:0px;
+      line-height:28px;
+    }
+
   }
   
   .user-info, {
