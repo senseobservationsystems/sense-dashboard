@@ -7,17 +7,29 @@ angular.module('dashboardApp.services')
       function ($q, csResource) {
 
     function DashboardService() {
+      this.groupId = null;
       this.users = {}; // user resource
       this.userIds = []; // list of user_id on this group
 	    this.userIdMap = {}; // map user_id to user object
       this.sensorIds = []; // list of sensor_id on this group
 	    this.sensorIdMap = {}; // map sensor_id to sensor object
       this.currentUser = {};
-      this.timer = null;
       this.window = 5 * 60; // data window. in seconds
 
-      this.getUsers = function(groupId, currentUser) {
+      this.reset = function() {
+        this.users = {};
+        this.userIds = [];
+        this.userIdMap = {};
+        this.sensorIds = [];
+        this.sensorIdMap = {};
+        this.currentUser = {};
+      };
+
+      this.initialize = function(groupId, currentUser) {
+        this.reset();
+        this.groupId = groupId;
         this.currentUser = currentUser;
+
         var deferred = $q.defer();
 
         // getting group user list from commonsense
@@ -25,13 +37,20 @@ angular.module('dashboardApp.services')
         self.users = csResource.GroupUser.query({groupId: groupId}, function(users) {
           for (var i=0; i < users.users.length; i++) {
             var user = self.users.users[i];
+            if (user.accepted === false) { continue; }
             //user.location = user.reachability = ''; // initial state
             self.userIds.push(user.id);
             self.userIdMap[user.id] = user;
           }
 
           // getting related sensor
-          csResource.GroupSensor.query({groupId: groupId, details: 'full'}, function(result) {
+          csResource.getAllData(csResource.GroupSensor, {groupId: groupId, details: 'full'}, 'sensors').then(function(response) {
+            if (!response.success) {
+              console.log('error while getting sensors for group');
+              return;
+            }
+            var result = response.result;
+
             var failure = function() {
               console.log('failed while getting last data point for sensor' + sensor.id);
             };
@@ -43,8 +62,8 @@ angular.module('dashboardApp.services')
                 sensor.processData(result.data);
               }
             };
-            for (var i=0; i < result.sensors.length; i++) {
-              var sensor = result.sensors[i];
+            for (var i=0; i < result.length; i++) {
+              var sensor = result[i];
               if (self.keepSensor(sensor)) {
                 self.sensorIds.push(sensor.id);
                 self.sensorIdMap[sensor.id] = sensor;
@@ -57,8 +76,12 @@ angular.module('dashboardApp.services')
                 // give function to process sensor data
                 if (sensor.name === 'Location') {
                   sensor.processData = self.processLocation;
+                  sensor.user.location = 'Unknown';
+                  sensor.user.location_sensor = sensor;
+
                 } else if (sensor.name === 'Reachability') {
                   sensor.processData = self.processReachability;
+                  sensor.user.reachability_sensor = sensor;
                 } else {
                   sensor.processData = self.processNothing;
                 }
@@ -68,6 +91,16 @@ angular.module('dashboardApp.services')
               }
             }
 
+            var users = self.users.users;
+            var len = users.length;
+            while (len--) {
+              var user = users[len];
+              if (user.accepted === false) {
+                users.splice(len, 1);
+              }
+
+              user.show = ['7890', '6328'].indexOf(user.id) === -1;
+            }
             deferred.resolve(self.users);
           });
 
@@ -104,7 +137,12 @@ angular.module('dashboardApp.services')
         }
 
         var promise = csResource.getAllData(csResource.MultipleSensorData, params, 'data');
-        promise.then(function(value) {
+        promise.then(function(response) {
+          if (!response.success) {
+            console.log('error while fetching multiple sensor data');
+            return;
+          }
+          var value = response.result;
           // for each sensor get only last data point
           var dataSensorMap = {};
           if (value) {
@@ -123,9 +161,6 @@ angular.module('dashboardApp.services')
             var sensor = self.sensorIdMap[key];
             sensor.processData(dataSensorMap[sensor.id]);
           }
-        },
-        function(reason) {
-          console.log('error while fetching data ' + reason);
         });
       };
 

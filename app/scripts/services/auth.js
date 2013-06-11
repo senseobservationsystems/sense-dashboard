@@ -10,6 +10,30 @@ angular.module('dashboardApp.services', ['dashboardApp.resource'])
 
     this.loggedIn = false;
 
+    this.check = function() {
+      if (this.loggedIn) { return true; }
+
+      if ($cookies.sessionId) {
+        this.sessionId = $cookies.sessionId;
+        this.currentUser = JSON.parse($cookies.currentUser);
+        this.loggedIn = true;
+
+        $http.defaults.headers.common['X-SESSION_ID'] = this.sessionId;
+
+        return true;
+      }
+
+      return false;
+    };
+
+    this.logout = function() {
+      this.sessionId = null;
+      this.currentUser = null;
+      delete $cookies.sessionId;
+      delete $cookies.currentUser;
+      this.loggedIn = false;
+    };
+
     this.login = function(username, password) {
       var deffered = $q.defer();
       var user = {'username': username, 'password': Crypto.MD5(password)};
@@ -23,6 +47,7 @@ angular.module('dashboardApp.services', ['dashboardApp.resource'])
 
         self.loggedIn = true;
         self.currentUser = csResource.CurrentUser.get(function() {
+          $cookies.currentUser = JSON.stringify(self.currentUser);
           deffered.resolve(self.sessionId);
         });
       })

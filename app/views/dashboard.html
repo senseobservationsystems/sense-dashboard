@@ -2,15 +2,13 @@
  <div class="navbar navbar-inverse navbar-fixed-top">
       <div class="navbar-inner">
         <div class="container">
-          <a class="brand" href="#/dashboard"><img src="images/icon.png"></a>
-            
+          <a class="brand" href="#/dashboard"><img src="images/ignore/icon.png"></a>
           <div class="nav-collapse collapse">
             <ul class="nav right">
               <li><a href="#/dashboard">Sense Dashboard</a></li>
-              
 
             </ul>
-            <a class="btn pull-right" href="#/"><i class="icon-off"></i> Sign out</a>
+            <a class="btn pull-right" href="#/logout"><i class="icon-off"></i> Sign out</a>
           </div><!--/.nav-collapse -->
         </div>
       </div>
@@ -21,7 +19,7 @@
     <tr>
       <th ng-click="sortUser('who')">
         <i ng-class="{'icon-chevron-up': dir == 'asc', 'icon-chevron-down': dir == 'desc'}" ng-show="sort == 'who'"></i>
-        Person 
+        Person
       </th>
       <th ng-click="sortUser('where')">
         <i ng-class="{'icon-chevron-up': dir == 'asc', 'icon-chevron-down': dir == 'desc'}" ng-show="sort == 'where'"></i>
@@ -32,16 +30,20 @@
         Reachability
       </th>
     </tr>
-  </thead>
-  <tbody>
-    <tr ng-repeat="user in users.users">
+    </thead>
+    <tbody>
+    <tr ng-repeat="user in users.users" ng-show="user.show">
       <td>
         <img ng-src="{{user.email | gravatarUrl:25 }}"/>
         <a ng-href="#/person/{{user.id}}">{{ fullName(user) }}</a> ({{ user.email }})
       </td>
-      <td class="value" ng-class="{unknown: user.location == 'Unknown'}">{{ user.location }}</td>
+      <td class="value" ng-class="{unknown: user.location == 'Unknown'}">
+        {{ user.location }}
+        <span ng-show="dashboardDebug"> {{user.location_sensor.id }} </span>
+      </td>
       <td ng-class="{reachable: user.reachability == 'reachable', unreachable: user.reachability == 'unreachable', unknown: user.reachability == 'Unknown'}" class="value">
         {{ user.reachability }}
+        <span ng-show="dashboardDebug">{{ user.reachability_sensor.id }}</span>
       </td>
     </tr>
     </tbody>

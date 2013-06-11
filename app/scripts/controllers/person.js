@@ -1,12 +1,13 @@
 'use strict';
-/*global Highcharts:false*/
+/* global Highcharts */
+/* global dashboardDebug */
 
 angular.module('dashboardApp')
   .controller('PersonCtrl',
   ['$scope', '$location', '$routeParams', '$window', '$timeout', 'authService', 'personalSensor', 'csResource',
-  'chartService',
-  function ($scope, $location, $routeParams, $window, $timeout, authService, personalSensor, csResource, chartService) {
-    var loggedIn = authService.loggedIn;
+  'chartService', 'csUtil',
+  function ($scope, $location, $routeParams, $window, $timeout, authService, personalSensor, csResource, chartService, csUtil) {
+    var loggedIn = authService.check();
     if (!loggedIn) {
       //set redirection to this page as r, redirect to main page
       $window.location.href = '/';
@@ -15,6 +16,12 @@ angular.module('dashboardApp')
     } else {
       $location.search('r', null);
     }
+
+    $scope.$watch(function() {
+      return dashboardDebug;
+    }, function() {
+      $scope.dashboardDebug = dashboardDebug;
+    });
 
     $scope.userId = $routeParams.id;
     $scope.reachability = 'loading..';
@@ -64,7 +71,11 @@ angular.module('dashboardApp')
                 var now = (new Date()).getTime() / 1000;
                 if (now - point.date < 12 * 60 * 60) {
                   $scope.reachability = point.value;
+                } else {
+                  $scope.reachability = 'reachable';
                 }
+              } else {
+                $scope.reachability = 'reachable';
               }
             },
             function() { console.log('failed getting reachability data'); }
@@ -128,7 +139,13 @@ angular.module('dashboardApp')
               $scope.activityTimer = $timeout(function() {
                 var sensorId = $scope.activitySensor.id;
                 csResource.getAllData(csResource.SensorData, {id: sensorId, 'start_date': lastDate}, 'data').then(
-                  function(data) {
+                  function(response) {
+                    if (response.value) {
+                      console.log('error while getting activity data');
+                      return;
+                    }
+                    var data = response.result;
+
                     if (data && data.length > 0 && data[data.length-1].date !== lastDate) {
                       console.log('got new activity data');
                       var series = highchart.series;
@@ -187,7 +204,13 @@ angular.module('dashboardApp')
               $scope.accelerometerTimer = $timeout(function() {
                 var sensorId = $scope.accelerometerSensor.id;
                 csResource.getAllData(csResource.SensorData, {id: sensorId, 'start_date': lastDate}, 'data').then(
-                  function(data) {
+                  function(response) {
+                    if (response.value) {
+                      console.log('error while getting activity data');
+                      return;
+                    }
+                    var data = response.result;
+
                     if (data && data.length > 0 && data[data.length-1].date !== lastDate) {
                       lastData = data[data.length-1];
                       lastDate = lastData.date;
@@ -196,9 +219,9 @@ angular.module('dashboardApp')
                         var value = JSON.parse(point.value);
                         var series = highchart.series;
                         var date = point.date * 1000;
-                        var xaxis = value['x-axis'];
-                        var yaxis = value['y-axis'];
-                        var zaxis = value['z-axis'];
+                        var xaxis = csUtil.getFloat(value['x-axis'], 2);
+                        var yaxis = csUtil.getFloat(value['y-axis'], 2);
+                        var zaxis = csUtil.getFloat(value['z-axis'], 2);
                         series[0].addPoint([date, xaxis], true, true);
                         series[1].addPoint([date, yaxis], true, true);
                         series[2].addPoint([date, zaxis], true, true);

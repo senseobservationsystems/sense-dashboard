@@ -16,34 +16,46 @@ angular.module('dashboardApp.services')
         // get all group
         var allGroupPromise = csResource.getAllData(csResource.Group, {}, 'groups');
 
-        allGroupPromise.then(function(groups) {
+        allGroupPromise.then(function(response) {
+          if (!response.success) {
+            console.log('error getting list of sensor of a group');
+            return;
+          }
+
+          var groups = response.result;
+
           // get all sensor belongs to group
           var groupPromise  = [];
           for (var i in groups) {
             groupPromise.push(csResource.getAllData(csResource.GroupSensor, {groupId: groups[i].id, details: 'full'}, 'sensors'));
           }
 
-          $q.all(groupPromise).then(function(sensors) {
+          $q.all(groupPromise).then(function(result) {
 
             var retval = [];
-            for (var i in sensors) {
-              retval = retval.concat(sensors[i]);
+            for (var i in result) {
+              if (result[i].success) {
+                retval = retval.concat(result[i].result);
+              }
             }
-            sensorGroupDeffered.resolve(retval);
+            sensorGroupDeffered.resolve({success: true, result: retval});
           }, function() { console.log('error while getting sensor from groups'); }
           );
 
-        }, function() { console.log('error getting list of sensor of a group'); }
+        }
         );
 
         var promise = $q.all([allSensorPromise, sensorGroupDeffered.promise]);
-        promise.then(function(sensorArray) {
+        promise.then(function(response) {
+          if (!response.success) {
+            console.log('error while combining all user sensor');
+          }
+
           var retval = [];
           var currentUserId = authService.currentUser.user.id;
 
-          for (var i in sensorArray) {
-            // assign current_user for the first promise (own sensor)
-            var current = sensorArray[i];
+          for (var i in response) {
+            var current = response[i].result;
             for (var j in current) {
               var sensor = current[j];
               if (!sensor) { continue; }
@@ -52,7 +64,7 @@ angular.module('dashboardApp.services')
               }
             }
 
-            retval = retval.concat(sensorArray[i]);
+            retval = retval.concat(response[i].result);
           }
           deffered.resolve(retval);
         });

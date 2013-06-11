@@ -28,13 +28,12 @@ angular.module('dashboardApp.resource', [])
         if (cresult[resourceName].length === perPage) {
           self.getDataRec(resource, parameter, resourceName, page + 1, perPage, result, deferred);
         } else {
-          deferred.resolve(result);
+          deferred.resolve({success: true, result: result});
         }
       }, function() {
+        // TODO: Handle 409 to retry the call
         console.log('error while retreiving resource');
-        // so that it still return previous result. client should took care
-        // of the returned value
-        deferred.resolve(result);
+        deferred.resolve({success: false, result: result});
       });
     };
 
