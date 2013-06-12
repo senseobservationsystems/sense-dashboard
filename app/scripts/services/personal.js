@@ -6,67 +6,27 @@ angular.module('dashboardApp.services')
     ['$q', 'csResource', 'authService',
     function ($q, csResource, authService) {
     function PersonalSensor() {
-      this.initialize = function() {
+      this.initialize = function(groupId) {
         var deffered = $q.defer();
-        var sensorGroupDeffered = $q.defer();
 
-        // get sensor
-        var allSensorPromise = csResource.getAllData(csResource.Sensor, {}, 'sensors');
-
-        // get all group
-        var allGroupPromise = csResource.getAllData(csResource.Group, {}, 'groups');
-
-        allGroupPromise.then(function(response) {
+        csResource.getAllData(csResource.GroupSensor, {groupId: groupId, details: 'full'}, 'sensors').then(function(response) {
           if (!response.success) {
-            console.log('error getting list of sensor of a group');
-            return;
+            console.log('error getting sensor for group ' + groupId);
+            deffered.reject();
           }
 
-          var groups = response.result;
-
-          // get all sensor belongs to group
-          var groupPromise  = [];
-          for (var i in groups) {
-            groupPromise.push(csResource.getAllData(csResource.GroupSensor, {groupId: groups[i].id, details: 'full'}, 'sensors'));
-          }
-
-          $q.all(groupPromise).then(function(result) {
-
-            var retval = [];
-            for (var i in result) {
-              if (result[i].success) {
-                retval = retval.concat(result[i].result);
-              }
-            }
-            sensorGroupDeffered.resolve({success: true, result: retval});
-          }, function() { console.log('error while getting sensor from groups'); }
-          );
-
-        }
-        );
-
-        var promise = $q.all([allSensorPromise, sensorGroupDeffered.promise]);
-        promise.then(function(response) {
-          if (!response.success) {
-            console.log('error while combining all user sensor');
-          }
-
-          var retval = [];
+          var sensors = response.result;
           var currentUserId = authService.currentUser.user.id;
 
-          for (var i in response) {
-            var current = response[i].result;
-            for (var j in current) {
-              var sensor = current[j];
-              if (!sensor) { continue; }
-              if (!sensor.owner) {
-                sensor.owner = {id: currentUserId};
-              }
+          for (var j in sensors) {
+            var sensor = sensors[j];
+            if (!sensor) { continue; }
+            if (!sensor.owner) {
+              sensor.owner = {id: currentUserId};
             }
-
-            retval = retval.concat(response[i].result);
           }
-          deffered.resolve(retval);
+
+          deffered.resolve(sensors);
         });
 
         return deffered.promise;

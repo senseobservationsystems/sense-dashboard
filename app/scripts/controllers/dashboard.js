@@ -65,7 +65,7 @@ angular.module('dashboardApp')
     }
 
     $scope.showPerson = function(id){
-      window.location.href="#/person/"+id
+      window.location.href = '#/person/' + id;
     };
 
 

@@ -46,7 +46,8 @@ angular.module('dashboardApp')
       return user.name + ' ' + user.surname;
     };
 
-    personalSensor.initialize().then(function(result){
+    var groupId = '1875';
+    personalSensor.initialize(groupId).then(function(result){
       $scope.sensors = result;
       var weatherSensors = personalSensor.findFirstSensor(result, 'weather', $scope.userId);
       $scope.weatherSensor = weatherSensors[weatherSensors.length -1];
@@ -74,14 +75,14 @@ angular.module('dashboardApp')
                 var point = value.data[0];
                 var now = (new Date()).getTime() / 1000;
                 if (now - point.date < 12 * 60 * 60) {
-                  $scope.reachability = point.value;       
+                  $scope.reachability = point.value;
                 } else {
                   $scope.reachability = 'reachable';
                 }
               } else {
                 $scope.reachability = 'reachable';
               }
-              $scope.phoneLabel = ($scope.reachability=='reachable')?"Available":"Busy";
+              $scope.phoneLabel = ($scope.reachability === 'reachable') ? 'Available' : 'Busy';
             },
             function() { console.log('failed getting reachability data'); }
             );
@@ -92,19 +93,20 @@ angular.module('dashboardApp')
       if ($scope.reachabilitySensor) {
         updateReachability();
       }
-      
+
       function updateLocation(){
         $scope.locationTimer = $timeout(function(){
           csResource.SensorData.query({id:$scope.locationSensor.id, 'last':1},
             function(value){
-              $scope.location = "unknown";
+              $scope.location = 'unknown';
               if( value.data.length > 0 ){
                 $scope.location = value.data[0];
               }
-              $scope.locationLabel = ($scope.location == "work")?"In office":"Out of office";
-                                       
+              $scope.locationLabel = ($scope.location === 'work') ? 'In office' : 'Out of office';
+
             });
-            updateLocation();
+
+          updateLocation();
 
         },5000);
       }

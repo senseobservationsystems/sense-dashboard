@@ -170,7 +170,7 @@ angular.module('dashboardApp.services')
        */
       this.processLocation = function(data) {
         var location = 'Unknown';
-        
+
         if (data && data.length > 0) {
           var point = data[data.length -1];
           var now = (new Date()).getTime() / 1000;
@@ -182,7 +182,7 @@ angular.module('dashboardApp.services')
 
         }
         this.user.location = location;
-        this.user.locationLabel = (location=='work')?"In office":"Out of office";
+        this.user.locationLabel = (location === 'work') ? 'In office' : 'Out of office';
       };
 
       this.processReachability = function(data) {
@@ -198,7 +198,7 @@ angular.module('dashboardApp.services')
         }
 
         this.user.reachability = reachable;
-        this.user.phoneLabel = (reachable=='reachable')?"Available":"Busy";
+        this.user.phoneLabel = (reachable === 'reachable') ? 'Available' : 'Busy';
       };
 
       this.processNothing = function() {
