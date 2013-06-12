@@ -1,51 +1,39 @@
 <div ng-init="initialize()" class="user-table" ng-show="loggedIn">
- <div class="navbar navbar-inverse navbar-fixed-top">
-      <div class="navbar-inner">
-        <div class="container">
-          <a class="brand" href="#/dashboard"><img src="images/ignore/icon.png"></a>
-          <div class="nav-collapse collapse">
-            <ul class="nav right">
-              <li><a href="#/dashboard">Sense Dashboard</a></li>
+  <div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner">
+      <div class="container">
+        <a class="brand" href="#/dashboard"><img src="images/ignore/icon.png"></a>
 
-            </ul>
-            <a class="btn pull-right" href="#/logout"><i class="icon-off"></i> Sign out</a>
-          </div><!--/.nav-collapse -->
-        </div>
+        <div class="nav-collapse collapse">
+          <ul class="nav right">
+            <li><a href="#/dashboard">Sense Dashboard</a></li>
+
+
+          </ul>
+          <a class="btn pull-right" href="#/"><i class="icon-off"></i> Sign out</a>
+        </div><!--/.nav-collapse -->
       </div>
     </div>
-  <h1>Group members</h1>
-  <table class="table table-hover">
-    <thead>
-    <tr>
-      <th ng-click="sortUser('who')">
-        <i ng-class="{'icon-chevron-up': dir == 'asc', 'icon-chevron-down': dir == 'desc'}" ng-show="sort == 'who'"></i>
-        Person
-      </th>
-      <th ng-click="sortUser('where')">
-        <i ng-class="{'icon-chevron-up': dir == 'asc', 'icon-chevron-down': dir == 'desc'}" ng-show="sort == 'where'"></i>
-        Location
-      </th>
-      <th ng-click="sortUser('reachable')">
-        <i ng-class="{'icon-chevron-up': dir == 'asc', 'icon-chevron-down': dir == 'desc'}" ng-show="sort == 'reachable'"></i>
-        Reachability
-      </th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr ng-repeat="user in users.users" ng-show="user.show">
-      <td>
-        <img ng-src="{{user.email | gravatarUrl:25 }}">
-        <a ng-href="#/person/{{user.id}}">{{ fullName(user) }}</a> ({{ user.email }})
-      </td>
-      <td class="value" ng-class="{unknown: user.location == 'Unknown'}">
-        {{ user.location }}
-        <span ng-show="dashboardDebug"> {{user.location_sensor.id }} </span>
-      </td>
-      <td ng-class="{reachable: user.reachability == 'reachable', unreachable: user.reachability == 'unreachable', unknown: user.reachability == 'Unknown'}" class="value">
-        {{ user.reachability }}
-        <span ng-show="dashboardDebug">{{ user.reachability_sensor.id }}</span>
-      </td>
-    </tr>
-    </tbody>
-  </table>
+  </div>
+  <div class="container">
+    <!-- <div class="span12"> -->
+      <h1>Where's everyone at?</h1>
+      <p class="lead">Use this dashboard to see in a glance who is in and who is available.</p>
+    <!-- </div> -->
+    <ul class="thumbnails">
+      <li class="span6" ng-repeat="user in users.users" ng-show="user.show">
+      <div ng-click="showPerson({{user.id}})" class="thumbnail clearfix">
+        <img ng-src="{{user.email | gravatarUrl:100 }}" class="img-circle pull-left">
+        <h3>{{fullName(user)}}</h3>
+        <p>{{user.email}}</p>
+        <div class="status-icons">
+          <i ng-class="{positive: user.location == 'work'}" class="icon-building icon-2x"></i>
+          <span ng-class="{positive: user.location == 'work'}">{{user.locationLabel}}</span>
+          <i ng-class="{positive: user.reachability=='reachable'}" class="icon-phone icon-2x"></i> 
+          <span ng-class="{positive: user.reachability=='reachable'}">{{user.phoneLabel}}</span>
+        </div>
+      </div>
+      </li>
+    </ul>
+  </div>
 </div>
