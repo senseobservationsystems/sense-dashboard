@@ -16,7 +16,8 @@
     <div class="row-fluid">
       <div class="span6 ">
         <h1>Personal page</h1>
-        <p class="lead">Use this page to spy on a Sense employee</p>
+        <p class="lead">This page provides a more in depth view of a person's data.
+        </p>
       </div>
       <div class="span6 user-header">
         <img ng-src="{{user.email | gravatarUrl:100 }}" class="img-circle pull-left"></img>
@@ -30,29 +31,7 @@
         </div>
       </div>
     </div>
-    <!--
-  <div class="row-fluid user-header">
-    <div class="span9 user-info">
-      <img id="user-image" ng-src="{{ user.email | gravatarUrl:80 }}"/>
-      <div id="user-details">
-        <p class="user-name">
-        {{ user.name }} {{ user.surname }}
-        </p>
-        <p class="user-email">
-        {{ user.email }}
-        </p>
-      </div>
-    </div>
-    <div class="span3 reachability">
-      <span class="reachable"></span>
-      <span ng-class="{reachable: reachability == 'reachable', unreachable: reachability == 'unreachable', unknown: reachability == 'Unknown'}" class="value">
-        {{ reachability }}
-        <span ng-show="dashboardDebug">{{ reachabilitySensor.id }}</span>
-      </span>
-    </div>
-  </div>
--->
-
+  
   <div class="row-fluid">
     <div class="span12 widget">
       <div class="title">
