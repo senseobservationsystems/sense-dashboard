@@ -14,7 +14,7 @@ angular.module('dashboardApp.services')
       this.sensorIds = []; // list of sensor_id on this group
 	    this.sensorIdMap = {}; // map sensor_id to sensor object
       this.currentUser = {};
-      this.window = 5 * 60; // data window. in seconds
+      this.window = 6 * 60 * 60; // data window. in seconds
 
       this.reset = function() {
         this.users = {};
