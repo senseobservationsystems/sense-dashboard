@@ -43,6 +43,9 @@ angular.module('dashboardApp')
     $scope.sensors = [];
 
     $scope.fullName = function(user) {
+      if(!user) {
+        return '';
+      }
       return user.name + ' ' + user.surname;
     };
 
@@ -100,7 +103,7 @@ angular.module('dashboardApp')
             function(value){
               $scope.location = 'unknown';
               if( value.data.length > 0 ){
-                $scope.location = value.data[0];
+                $scope.location = value.data[0].value;
               }
               $scope.locationLabel = ($scope.location === 'work') ? 'In office' : 'Out of office';
 
